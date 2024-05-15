@@ -22,56 +22,107 @@
 
 """Defines the heapq functionalities, which mimic the Python module.
 
-```mojo
-from heapq import heapify
-
-var heap = List[Int](5,2,3,6,7)
-heapify(heap)
-print(heap)
+# TODO: add code block example
 ```
 """
 
+from collections import Optional
+from algorithm.swap import swap
+
+
 trait Comparable:
     """An element which can be greater or smaller than another element."""
-    
+
     fn __lt__(self, other: Self) -> Bool:
         """Implements < (less than) operator."""
         pass
-    
+
     fn __gt__(self, other: Self) -> Bool:
         """Implements > (greater than) operator."""
         pass
 
+
 trait OrderedCollectionElement(CollectionElement, Comparable):
     """An Element which can exist in a collection with some specified order."""
+
     pass
 
 
 fn heappush[T: OrderedCollectionElement](inout array: List[T], value: T):
     """
-    Pushes the element onto the heap, maintaining structure and order properties.
+    Pushes the element onto the heap.
 
-    Parameters
-    ----------
-    array: A reference to the List.
-        This List resembles the heap and will be updated in-place.
-    value: 
-        Value to be pushed.
+    This function modifies the heap in-place to maintain the structure and
+    order properties.
 
-    Examples
-    ----------
-    var heap = List[Int]()
-    heapq.heappush(heap, 1)
-    heapq.heappush(heap, 2)
-    heapq.heappush(heap, 3)
+    Parameters:
+        T: The type of elements in the list.
+
+    Args:
+        array: A reference to the List, which resembles the heap.
+        value: Value to be pushed.
     """
     array.append(value)
 
-    var index  = len(array) - 1
+    var index = len(array) - 1
     var parent_index = (index - 1) // 2
 
-    while (index > 0 and value < array[parent_index]):
+    while index > 0 and value < array[parent_index]:
         array[index], array[parent_index] = array[parent_index], array[index]
-        
+
         index = parent_index
         parent_index = (index - 1) // 2
+
+
+fn heappop[T: OrderedCollectionElement](inout array: List[T]) -> Optional[T]:
+    """
+    Removes and returns the smallest element from the heap.
+
+    This function modifies the heap in-place to maintain the structure and
+    order properties.
+
+    Parameters:
+        T: The type of elements in the list.
+
+    Args:
+        array: A reference to the List, which resembles the heap.
+
+    Returns:
+        An `Optional[T]` - if the array is empty returns None.
+        Else the smallest element is removed and the array is
+        updated.
+    """
+    if len(array) == 0:
+        return Optional[T](None)
+
+    # Swap last value with the root and pop root
+    swap(array[0], array[-1])
+    var to_return = array.pop()
+
+    # Rebalance the tree
+    var idx = 0
+    while True:
+        var left_child_idx = (2 * idx) + 1
+        var right_child_idx = left_child_idx + 1
+
+        # No left child -> no right child either -> leaf node
+        if left_child_idx >= len(array):
+            break
+
+        # Find index of smaller child
+        var smaller_child_idx = -1
+        if (
+            right_child_idx < len(array)
+            and array[right_child_idx] < array[left_child_idx]
+        ):
+            smaller_child_idx = right_child_idx
+        else:
+            smaller_child_idx = left_child_idx
+
+        if array[idx] > array[smaller_child_idx]:
+            swap(array[idx], array[smaller_child_idx])
+            idx = smaller_child_idx
+        else:  # Already balanced
+            break
+
+    return to_return
