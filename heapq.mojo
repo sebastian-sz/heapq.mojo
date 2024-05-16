@@ -22,7 +22,23 @@
 
 """Defines the heapq functionalities, which mimic the Python module.
 
-# TODO: add code block example
+```mojo
+import heapq
+
+var heap = List[Int](3, 2, 1)
+heapq.heapify(heap)
+for e in heap:
+    print(e[])
+# 1,2,3
+
+heapq.heappush(heap, 0)
+for e in heap:
+    print(e[])
+# 0,1,3,2
+
+var smallest = heapq.heappop(heap)
+if smallest:    # optional
+    print(smallest.take())
 ```
 """
 
@@ -63,15 +79,15 @@ fn heappush[T: OrderedCollectionElement](inout array: List[T], value: T):
         value: Value to be pushed.
     """
     array.append(value)
-
     var index = len(array) - 1
     var parent_index = (index - 1) // 2
 
     while index > 0 and value < array[parent_index]:
-        array[index], array[parent_index] = array[parent_index], array[index]
-
+        array[index] = array[parent_index]
         index = parent_index
         parent_index = (index - 1) // 2
+
+    array[index] = value
 
 
 fn heappop[T: OrderedCollectionElement](inout array: List[T]) -> Optional[T]:
@@ -100,7 +116,16 @@ fn heappop[T: OrderedCollectionElement](inout array: List[T]) -> Optional[T]:
     var to_return = array.pop()
 
     # Rebalance the tree
-    var idx = 0
+    _percolate_down(array, 0)
+
+    return to_return
+
+
+fn _percolate_down[
+    T: OrderedCollectionElement
+](inout array: List[T], index: Int):
+    var idx = index  # Make explicit copy to prevent mutability issus
+
     while True:
         var left_child_idx = (2 * idx) + 1
         var right_child_idx = left_child_idx + 1
@@ -125,4 +150,20 @@ fn heappop[T: OrderedCollectionElement](inout array: List[T]) -> Optional[T]:
         else:  # Already balanced
             break
 
-    return to_return
+
+fn heapify[T: OrderedCollectionElement](inout array: List[T]):
+    """
+    Transform the list into a heap, in-place, in linear time.
+
+    This function modifies the list in-place to satisfy the heap property,
+    ensuring that for every node `i` other than the root, the value of `i`
+    is greater than or equal to the value of its parent.
+
+    Parameters:
+        T: The type of elements in the list.
+
+    Args:
+        array: A reference to the List, which will be transformed into a heap.
+    """
+    for idx in range(len(array) - 1, -1, -1):
+        _percolate_down(array, idx)
