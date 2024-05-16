@@ -89,6 +89,7 @@ fn heappush[T: OrderedCollectionElement](inout array: List[T], value: T):
 
     array[index] = value
 
+
 fn heappop[T: OrderedCollectionElement](inout array: List[T]) -> Optional[T]:
     """
     Removes and returns the smallest element from the heap.
@@ -118,10 +119,12 @@ fn heappop[T: OrderedCollectionElement](inout array: List[T]) -> Optional[T]:
     _percolate_down(array, 0)
 
     return to_return
-    
 
-fn _percolate_down[T: OrderedCollectionElement](inout array: List[T], index: Int):
-    var idx = index # Make explicit copy to prevent mutability issus
+
+fn _percolate_down[
+    T: OrderedCollectionElement
+](inout array: List[T], index: Int):
+    var idx = index  # Make explicit copy to prevent mutability issus
 
     while True:
         var left_child_idx = (2 * idx) + 1
@@ -152,8 +155,8 @@ fn heapify[T: OrderedCollectionElement](inout array: List[T]):
     """
     Transform the list into a heap, in-place, in linear time.
 
-    This function modifies the list in-place to satisfy the heap property, 
-    ensuring that for every node `i` other than the root, the value of `i` 
+    This function modifies the list in-place to satisfy the heap property,
+    ensuring that for every node `i` other than the root, the value of `i`
     is greater than or equal to the value of its parent.
 
     Parameters:
@@ -162,6 +165,5 @@ fn heapify[T: OrderedCollectionElement](inout array: List[T]):
     Args:
         array: A reference to the List, which will be transformed into a heap.
     """
-    for idx in range(len(array)-1, -1, -1):
-        _percolate_down(array, idx) 
-
+    for idx in range(len(array) - 1, -1, -1):
+        _percolate_down(array, idx)

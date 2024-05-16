@@ -172,6 +172,7 @@ def test_heappop_multiple_swaps():
     assert_equal(popped.take(), 1)
     _assert_list_equal(heap, expected)
 
+
 def test_heapify_empty_array():
     # given
     var heap = List[Int]()
@@ -193,6 +194,7 @@ def test_heapify_single_element():
     # then
     _assert_list_equal(heap, List[Int](1))
 
+
 def test_heapify_sorted_values():
     # given
     var heap = List[Int](1, 2, 3)
@@ -202,6 +204,7 @@ def test_heapify_sorted_values():
 
     # then
     _assert_list_equal(heap, List[Int](1, 2, 3))
+
 
 def test_heapify_unsorted_values():
     # given
@@ -213,11 +216,12 @@ def test_heapify_unsorted_values():
     # then
     _assert_list_equal(heap, List[Int](1, 2, 3))
 
+
 def test_heapify_multiple_iterations():
     # given
     var heap = List[Int](9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
     var expected = List[Int](0, 1, 3, 2, 5, 4, 7, 9, 6, 8)
-    
+
     # when
     heapq.heapify(heap)
 
