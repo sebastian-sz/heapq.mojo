@@ -4,7 +4,7 @@ test:
 fmt:
 	mojo format *.mojo
 
-build-package:
+build:
 	mkdir -p heapq/
 	cp heapq.mojo heapq/
 	touch heapq/__init__.mojo
