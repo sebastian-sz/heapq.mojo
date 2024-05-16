@@ -22,7 +22,23 @@
 
 """Defines the heapq functionalities, which mimic the Python module.
 
-# TODO: add code block example
+```mojo
+import heapq
+
+var heap = List[Int](3, 2, 1)
+heapq.heapify(heap)
+for e in heap:
+    print(e[])
+# 1,2,3
+
+heapq.heappush(heap, 0)
+for e in heap:
+    print(e[])
+# 0,1,3,2
+
+var smallest = heapq.heappop(heap)
+if smallest:    # optional
+    print(smallest.take())
 ```
 """
 
