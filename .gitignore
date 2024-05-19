@@ -1,0 +1,5 @@
+# Mojo package files
+*.mojopkg
+
+# Python cache
+__pycache__/
