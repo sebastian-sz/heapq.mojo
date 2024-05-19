@@ -1,7 +1,7 @@
 # Introduction
 Python's heapq module rewritten in Mojo.
 
-# How to use
+# Quickstart
 The usage is meant to mimic Python as much as possible:
 
 ```mojo
@@ -17,26 +17,31 @@ heapq.heappush(heap, -1)
 
 # Pop from the heap 
 var v = heapq.heappop(heap)
-if v:   # NOTE: Optional value (None if empty)
+if v:   # NOTE: Optional value (None if heap's empty)
     print(v.take())
 ```
 
 Currently, only `heapify`, `heappush` and `heappop` are implemented.
 
-# Installation
- 
-### Option 1:
-Download the `heapq.mojopkg` from release page and use it directly.
+The only major difference compared to Python is that `heappop` won't raise an exception on empty heap. Rather, an [optional](https://docs.modular.com/mojo/stdlib/collections/optional/) is returned, that is `None` if the list is empty.
 
-### Option 2:
-Just download the `heapq.mojo` file from this repository.
+# Installation
+This is a single-file module, so the installation should be trivial:
+
+* Option A: pull the repo, build the `heapq.mojopkg` (`make build`) and use that.
+* Option B: download `heapq.mojo` and use the file directly.
+
+If all goes well, you should be able to `import heapq` in mojo.
 
 # Performance
-Mojo implementation tends to be faster, except for heappush, which shows performance degradation. See `benchmarks/` directory for more details.
+Mojo implementation is faster Python, usually by the order of ~10x. For detailed analysis, please see [benchmarks/](benchmarks/) directory.
 
-# Personal note
-I mostly wrote this mini-project to see how Mojo feels like.
+# Compatibility
+As of writing this repository, the Mojo language is rapidly evolving. I'm using the `24.3` version and will try to keep this compatible. If something isn't working don't hestitate to open an issue.
 
-I definitely like the tooling, like `mojo test`, especially for such new language. There are some sharp edges here and there but overall the feeling is very positive.
+# Motivation
+I wrote this mini-project as I think that it's the best way get familiar with a new language. Also, I couldn't find any other priority queue implementation in Mojo, so there is that. It was really enjoyable to work with the tooling (mojo test, mojo format, mojo package) despite how new and young the language is.
 
-If you spot any issues, feel free to let me know!
+Mojo's philosophy is to be compatible / similar to Python, so I kept the Python's approach to heapq - operate directly on an array. I think this is an interesting alternative to having a class (although, given these functions, a class could could be easily added).
+
+The only thing I wish for would be a proper CI/CD pipeline that would run the tests/formatting on each PR. Currently, there is no official way to install the Mojo in a separate environment (e.g. Docker). I could probably try to replicate the [solution from Mojo's stdlib](https://github.com/modularml/mojo/blob/bf73717d79fbb79b4b2bf586b3a40072308b6184/.github/workflows/examples.yml#L43-L48), or use deprecated features, but it seems hacky and I don't feel like rewriting it when something stable comes out.

@@ -1,4 +1,3 @@
-
 import time
 
 import heapq
@@ -11,12 +10,13 @@ fn main() raises:
         var mean_ms = _bench(data)
         print(N[], "->", mean_ms)
 
+
 fn _bench(data: List[Int]) -> Float32:
     # Warmup
     for _ in range(10):
         var d = List[Int](data)
         heapq.heapify(d)
-    
+
     # Benchmark
     var results = List[Float64]()
     for _ in range(1000):
@@ -29,6 +29,5 @@ fn _bench(data: List[Int]) -> Float32:
         var start_ms = start / 1e6
         var stop_ms = stop / 1e6
         results.append(stop_ms - start_ms)
-    
-    return utils.sum(results) / len(results)
 
+    return utils.sum(results) / len(results)

@@ -16,12 +16,15 @@ def _benchmark(data: list[int]) -> float:
     # Warmup
     for _ in range(10):
         d = data.copy()
+        # There is no manual list reserve option
+        # compatible with .append for Python sadly 
         heapq.heappush(d, -4099)    
     
     # Benchmark
     results = []
     for _ in range(1000):
         d = data.copy()
+        # No reserve, check readme for details
         
         start = time.perf_counter_ns()
         heapq.heappush(d, -4099)

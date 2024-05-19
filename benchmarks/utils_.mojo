@@ -1,10 +1,11 @@
 from python import Python
 
+
 fn get_array(N: Int) raises -> List[Int]:
     """Get Python-equivalent array of random ints."""
     var random = Python.import_module("random")
     random.seed(42)
-    
+
     var data = List[Int]()
     data.reserve(N)
     for _ in range(N):

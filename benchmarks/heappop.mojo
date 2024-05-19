@@ -12,7 +12,7 @@ fn main() raises:
 
 
 fn _bench(data_: List[Int]) -> Float32:
-    var data = List[Int](data_) # Explicit copy
+    var data = List[Int](data_)  # Explicit copy
     heapq.heapify(data)
 
     # Warmup
@@ -32,5 +32,5 @@ fn _bench(data_: List[Int]) -> Float32:
         var start_ms = start / 1e6
         var stop_ms = stop / 1e6
         results.append(stop_ms - start_ms)
-    
+
     return utils.sum(results) / len(results)

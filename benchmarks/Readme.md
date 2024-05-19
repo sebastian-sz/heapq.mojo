@@ -2,6 +2,8 @@
 This directory contains the micro-benchmark code, to compare the performance of
 heapq operations in Mojo vs Python.
 
+I tried to make the benchmarks as similar / fair as possible.
+
 # How to run:
 Build the package from the root of this repo and copy it here:
 
@@ -11,9 +13,11 @@ From then you can just run the corresponding `.py` and `.mojo` files, e.g:
 `python3 heapify.py` or `mojo heapify.mojo`
 
 # Results
-TL;DR: The mojo implementation tends to be around order of magnitude faster, except for heappush, in which the performance degrades significantly. 
+The mojo implementation tends to be around order of magnitude faster, for Python's equivalent implementation.
 
-I suspect that the issue could be in Mojo's `List.append` method which, as of writing this document, is faster in Python (see benchmark for `append` below).
+The benchmark for `heappush` might not be 100% fair, as there isn't a `resize` equivalent in Python for a Python list. See the discussion in the results for more info.
+
+Below I present the detailed results, measured on Ubuntu 22.04 and Mojo 24.3:
 
 ### Heapify
 
@@ -35,24 +39,22 @@ I suspect that the issue could be in Mojo's `List.append` method which, as of wr
 | 1 000 000  | 0.00379      | 0.00168   | 0.56    |
 
 ### Heappush
-Heappush shows biggest performance divergence, I suspect due to List.append operation. Please see the benchmark on append below.
+Heappush imo is the most difficult to compare **fairly** with Python.
+
+Running `heappush` will call `.append` internally. This operation might cause memory reallocation. If we do not run `.reserve` on a Mojo List, the benchmark will unfairly favor Python as Mojo's heappush will spend 99% time running reallocation **every time**.  
+This operation is expensive, but in a real-world scenario, we expect this to happens rarely.
+
+Contrary, if I run `.reserve` in Mojo the benchmark will unfairly treat Python, as Mojo has a guarantee that no reallocation happens, which I cannot guarantee for Python.  
+Python doesn't have an option to preallocate, reserve, force or disable a list reallocation.
+
+I decided to keep `.reserve` in `benchmarks/heappush.mojo` as it's closer to a real-world scenario, where the reallocations happen rarely. My advice, however, is to remember that this benchmark isn't 100% fair (I can't guarantee no realloc in Python) and take these numbers with a grain of salt. 
+
+I think it's safe to assume that Mojo generally should also be faster for `heappush` as well.
+
 | N          | Python (ms) | Mojo (ms) | Speedup |
 |------------|--------------|-----------|---------|
-| 100        | 0.0005       | 0.0002    | 0.68    |
-| 1 000      | 0.0003       | 0.0006    | -1.06   |
-| 10 000     | 0.0007       | 0.0045    | -5.42   |
-| 100 000    | 0.0006       | 0.0450    | -80.49  |
-| 1 000 000  | 0.6097       | 0.6799    | -0.12   |
-
-### Append
-| N          | Python (ms) | Mojo (ms) | Speedup |
-|------------|--------------|-----------|---------|
-| 100        | 0.0001       | 0.0002    | -0.26   |
-| 1 000      | 0.0001       | 0.0006    | -4.03   |
-| 10 000     | 0.0002       | 0.0041    | -17.39  |
-| 100 000    | 0.0002       | 0.0420    | -202.62 |
-| 1 000 000  | 0.6009       | 0.6622    | -0.10   |
-
-
-# Note on benchmark code
-I specifically did not use the Mojo's benchmark module as I wanted these comparison's to be as similar as possible.
+| 100        | 0.00051      | 0.00006   | 0.88    |
+| 1,000      | 0.00029      | 0.00007   | 0.77    |
+| 10,000     | 0.00070      | 0.00009   | 0.87    |
+| 100,000    | 0.00055      | 0.00038   | 0.31    |
+| 1,000,000  | 0.60975      | 0.00157   | 1.00    |
