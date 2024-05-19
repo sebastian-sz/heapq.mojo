@@ -40,7 +40,7 @@ Mojo implementation is faster Python, usually by the order of ~10x. For detailed
 As of writing this repository, the Mojo language is rapidly evolving. I'm using the `24.3` version and will try to keep this compatible. If something isn't working don't hestitate to open an issue.
 
 # Motivation
-I wrote this mini-project as I think that it's the best way get familiar with a new language. Also, I couldn't find any other priority queue implementation in Mojo, so there is that. It was really enjoyable to work with the tooling (mojo test, mojo format, mojo package) despite how new and young the language is.
+I wrote this mini-project as I think that it's the best way get familiar with a new language. There are [existing implementations of a priority queue in Mojo](https://github.com/dimitrilw/toybox/blob/7d354dc53d435d58173e7c355882264d00478d06/toybox/heap.mojo#L10), but I did it for practice anyway. It was really enjoyable to work with the tooling (mojo test, mojo format, mojo package) despite how new and young the language is.
 
 Mojo's philosophy is to be compatible / similar to Python, so I kept the Python's approach to heapq - operate directly on an array. I think this is an interesting alternative to having a class (although, given these functions, a class could be easily added).
 
